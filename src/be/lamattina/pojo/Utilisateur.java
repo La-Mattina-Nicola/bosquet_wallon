@@ -53,11 +53,20 @@ public abstract class Utilisateur {
 		this.discriminator = discriminator;
 	}
 	
-	
+
 	public Utilisateur() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 	
-	
+	public Utilisateur(int id_utilisateur, String nom, String prenom, String mot_de_passe, String email,
+			String adresse) {
+		super();
+		this.id_utilisateur = id_utilisateur;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.mot_de_passe = mot_de_passe;
+		this.email = email;
+		this.adresse = adresse;
+	}
 }
