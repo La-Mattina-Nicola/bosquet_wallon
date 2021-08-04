@@ -1,7 +1,11 @@
 package be.lamattina.pojo;
 
+import be.lamattina.dao.AbstractDAOFactory;
+import be.lamattina.dao.DAO;
 
 public abstract class Utilisateur {
+	AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	DAO<Utilisateur> utilisateurdao = adf.getUtilisateurDAO();
 
 	private int id_utilisateur;
 	private String nom;
@@ -68,5 +72,9 @@ public abstract class Utilisateur {
 		this.mot_de_passe = mot_de_passe;
 		this.email = email;
 		this.adresse = adresse;
+	}
+
+	public void create() {
+		utilisateurdao.create(this);
 	}
 }

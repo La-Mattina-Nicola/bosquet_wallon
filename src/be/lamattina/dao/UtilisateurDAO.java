@@ -22,9 +22,16 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 		// TODO Auto-generated method stub
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("INSERT INTO User (nom, prenom, adresse, email, password, discriminator)"
-							+ "Values('" + obj.getNom() + "','" + obj.getPrenom() + "','" + obj.getAdresse() + "','" + obj.getEmail() + "','"
-							+ obj.getMot_de_passe() + "','" + obj.getDiscriminator() + "')");
+					.executeUpdate(
+							"INSERT INTO User (nom, prenom, adresse, email, password, discriminator)"
+							+ "Values('"
+								+ obj.getNom() + "','"
+								+ obj.getPrenom() + "','"
+								+ obj.getAdresse() + "','"
+								+ obj.getEmail() + "','"
+								+ obj.getMot_de_passe() + "','"
+								+ obj.getDiscriminator()
+								+ "')");
 			return true;
 		} catch (SQLException e) {
 			return false;
@@ -52,7 +59,8 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 					.executeQuery("SELECT * FROM User WHERE id = " + id);
 			if (result.first()) {
 				// Recupérer utilisateur en fonction de son discriminator : Artiste / Client / Gestionnaire / Organisateur
-				if (result.getString("discriminator").equals("Artiste")) {
+				String discriminator = result.getString("discriminator");
+				if (discriminator.equals("Artiste")) {
 					u = new Artiste(
 							result.getInt("id_utilisateur"),
 							result.getString("nom"),
@@ -61,7 +69,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 							result.getString("email"),
 							result.getString("adresse")
 						);
-				} else if (result.getString("discriminator").equals("Client")) {
+				} else if (discriminator.equals("Client")) {
 					u = new Client(
 							result.getInt("id_utilisateur"),
 							result.getString("nom"),
@@ -70,7 +78,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 							result.getString("email"),
 							result.getString("adresse")
 						);
-				} else if (result.getString("discriminator").equals("Gestionnaire")) {
+				} else if (discriminator.equals("Gestionnaire")) {
 					u = new Gestionnaire(
 							result.getInt("id_utilisateur"),
 							result.getString("nom"),
@@ -79,7 +87,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 							result.getString("email"),
 							result.getString("adresse")
 						);
-				} else if (result.getString("discriminator").equals("Organisateur")) {
+				} else if (discriminator.equals("Organisateur")) {
 					u = new Organisateur(
 							result.getInt("id_utilisateur"),
 							result.getString("nom"),
