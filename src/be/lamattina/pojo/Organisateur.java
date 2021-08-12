@@ -11,5 +11,10 @@ public class Organisateur extends Utilisateur {
 		super(id_utilisateur, nom, prenom, mot_de_passe, email, adresse);
 		// TODO Auto-generated constructor stub
 	}
+	public Organisateur(String nom, String prenom, String mot_de_passe, String email,
+			String adresse) {
+		super(nom, prenom, mot_de_passe, email, adresse);
+		// TODO Auto-generated constructor stub
+	}
 
 }

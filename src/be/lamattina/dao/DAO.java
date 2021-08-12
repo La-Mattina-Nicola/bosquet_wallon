@@ -2,6 +2,8 @@ package be.lamattina.dao;
 
 import java.sql.Connection;
 
+import be.lamattina.pojo.Utilisateur;
+
 public abstract class DAO<T> {
 	protected Connection connect = null;
 	
@@ -16,4 +18,7 @@ public abstract class DAO<T> {
 	public abstract boolean update(T obj);
 	
 	public abstract T find(int id);
+
+	// Methode utiliser pour pouvoir faire des recherches sur plusieurs champs de l'objet -> cf : Connexion (email/mdp)
+	public abstract T find(T obj);
 }

@@ -23,7 +23,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeUpdate(
-							"INSERT INTO User (nom, prenom, adresse, email, password, discriminator)"
+							"INSERT INTO Utilisateur (nom, prenom, adresse, email, mot_de_passe, type_utilisateur)"
 							+ "Values('"
 								+ obj.getNom() + "','"
 								+ obj.getPrenom() + "','"
@@ -56,55 +56,58 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery("SELECT * FROM User WHERE id = " + id);
+					.executeQuery("SELECT * FROM Utilisateur WHERE id = " + id);
 			if (result.first()) {
 				// Recupérer utilisateur en fonction de son discriminator : Artiste / Client / Gestionnaire / Organisateur
-				String discriminator = result.getString("discriminator");
-				if (discriminator.equals("Artiste")) {
-					u = new Artiste(
-							result.getInt("id_utilisateur"),
-							result.getString("nom"),
-							result.getString("prenom"),
-							result.getString("mot_de_passe"),
-							result.getString("email"),
-							result.getString("adresse")
-						);
-				} else if (discriminator.equals("Client")) {
-					u = new Client(
-							result.getInt("id_utilisateur"),
-							result.getString("nom"),
-							result.getString("prenom"),
-							result.getString("mot_de_passe"),
-							result.getString("email"),
-							result.getString("adresse")
-						);
-				} else if (discriminator.equals("Gestionnaire")) {
-					u = new Gestionnaire(
-							result.getInt("id_utilisateur"),
-							result.getString("nom"),
-							result.getString("prenom"),
-							result.getString("mot_de_passe"),
-							result.getString("email"),
-							result.getString("adresse")
-						);
-				} else if (discriminator.equals("Organisateur")) {
-					u = new Organisateur(
-							result.getInt("id_utilisateur"),
-							result.getString("nom"),
-							result.getString("prenom"),
-							result.getString("mot_de_passe"),
-							result.getString("email"),
-							result.getString("adresse")
-						);
-				}
-				else {
-					return null;
+				switch (result.getString("discriminator")) {
+				case "Artiste": 
+					u = new Artiste(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
+					break;
+				case "Gestionnaire":
+					u = new Gestionnaire(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
+					break;
+				case "Organisateur":
+					u = new Organisateur(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
+					break;
+				default:
+					u = new Client(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
+					break;
 				}
 			}
 		} catch (SQLException e) {
 			return null;
 		}
 		return u;
+	}
+	
+	@Override
+	public Utilisateur find(Utilisateur u) {
+		Utilisateur user = null;
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT * FROM User WHERE email = " + u.getEmail() + " mot_de_passe = " + u.getMot_de_passe());
+			if (result.first()) {
+				// Recupérer utilisateur en fonction de son discriminator : Artiste / Client / Gestionnaire / Organisateur
+				switch (result.getString("discriminator")) {
+				case "Artiste": 
+					user = new Artiste(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
+					break;
+				case "Gestionnaire":
+					user = new Gestionnaire(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
+					break;
+				case "Organisateur":
+					user = new Organisateur(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
+					break;
+				default:
+					user = new Client(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
+					break;
+				}
+			}
+		} catch (SQLException e) {
+			return null;
+		}
+		return user;
 	}
 
 }

@@ -62,7 +62,7 @@ public abstract class Utilisateur {
 		// TODO Auto-generated constructor stub
 		super();
 	}
-	
+
 	public Utilisateur(int id_utilisateur, String nom, String prenom, String mot_de_passe, String email,
 			String adresse) {
 		super();
@@ -74,7 +74,20 @@ public abstract class Utilisateur {
 		this.adresse = adresse;
 	}
 
-	public void create() {
-		utilisateurdao.create(this);
+	public Utilisateur(String nom, String prenom, String mot_de_passe, String email,
+			String adresse) {
+		super();
+		this.nom = nom;
+		this.prenom = prenom;
+		this.mot_de_passe = mot_de_passe;
+		this.email = email;
+		this.adresse = adresse;
+	}
+
+	public boolean create() {
+		return utilisateurdao.create(this);
+	}
+	public Utilisateur find() {
+		return utilisateurdao.find(this);
 	}
 }

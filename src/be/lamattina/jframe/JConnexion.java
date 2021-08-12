@@ -5,8 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,15 +17,18 @@ import javax.swing.border.EmptyBorder;
 
 import be.lamattina.dao.AbstractDAOFactory;
 import be.lamattina.dao.DAO;
+import be.lamattina.dao.UtilisateurDAO;
 import be.lamattina.pojo.*;
 
 @SuppressWarnings("serial")
-public class Connexion extends JFrame {
+public class JConnexion extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txt_id;
 	private JFrame fenetre = this;
 	private JPasswordField txt_password;
+	
+	private JListeSpectacle creationSpectacle;
 	/**
 	 * Launch the application.
 	 */
@@ -35,7 +36,8 @@ public class Connexion extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Connexion frame = new Connexion();
+					JConnexion frame = new JConnexion();
+					frame.setTitle("Connexion");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,82 +49,87 @@ public class Connexion extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Connexion() {
-		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
-		DAO<Utilisateur> userdao = adf.getUtilisateurDAO();
-		
+	public JConnexion() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 275, 210);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.setBackground(Color.orange);
-		JLabel lbl_identify = new JLabel("Nom : ");
-		lbl_identify.setBounds(50, 96, 200, 14);
+
+		JLabel lblTitre = new JLabel("Bosquet Wallon");
+		lblTitre.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitre.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblTitre.setBounds(10, 11, 242, 30);
+		contentPane.add(lblTitre);
+		JLabel lbl_identify = new JLabel("Email : ");
+		lbl_identify.setBounds(20, 52, 100, 14);
 		contentPane.add(lbl_identify);
 		JLabel lbl_password = new JLabel("Mot de passe :");
-		lbl_password.setBounds(50, 121, 200, 14);
+		lbl_password.setBounds(20, 80, 100, 14);
 		contentPane.add(lbl_password);
 		txt_id = new JTextField();
-		txt_id.setBounds(192, 93, 152, 20);
+		txt_id.setBounds(110, 49, 140, 20);
 		contentPane.add(txt_id);
 		txt_id.setColumns(10);
 		JButton btn_connect = new JButton("Connexion");
 		btn_connect.addMouseListener(new MouseAdapter() {
-			@Override
-			@SuppressWarnings("deprecation")
 			public void mousePressed(MouseEvent e) {
-				String pass = String.valueOf(txt_password.getText());
+				String email = String.valueOf(txt_id.getText().toLowerCase());
+				String mdp = String.valueOf(txt_password.getPassword());
+				
+				Utilisateur u = new Client();
+				u.setEmail(email);
+				u.setMot_de_passe(mdp);
+				
 				// Récupération des données de connexion
-				if (txt_id.getText().isEmpty() && pass.isEmpty()) {
+				if (email.isEmpty() && mdp.isEmpty()) {
 					// Show ERROR
-					JOptionPane.showMessageDialog(null, "Connection error ! Field can't be empty !");
+					JOptionPane.showMessageDialog(null, "Tout les champs doivent être complet !");
 				}
 				// Si les données sont remplies.
 				else {
 					// Verifier si l'utilisateur a rentrer les bonnes informations - (nom/mdp)
 						// aver la méthode FIND
-					//Utilisateur u = ((UtilisateurDAO)userdao).find(txt_id.getText().toLowerCase(), txt_password.getText());
-					Utilisateur u = new Artiste();
-					
-					// Vérification du type d'utilisateur connecter
-					// Si l'utilisateur est l'ORGANISATEUR - gérer le spectacle.
-					if (u instanceof Organisateur) {
-						
+					Utilisateur user = u.find();
+					if (user instanceof Artiste) {
+
+						JOptionPane.showMessageDialog(null, "CLIENT | Vous etes connecter !");
 					}
-					// Si l'utilisateur est un GESTIONNAIRE - jframe correspondant.
-					else if (u instanceof Gestionnaire) {
-						
-					}					
+					// Si l'utilisateur est l'ORGANISATEUR - gérer le spectacle
+					if (user instanceof Organisateur) {
+						creationSpectacle = new JListeSpectacle((Organisateur) user);
+						fenetre.dispose();
+						creationSpectacle.setVisible(true);
+					}
+					// Si l'utilisateur est un GESTIONNAIRE - jframe correspondant
+					else if (user instanceof Gestionnaire) {
+
+						JOptionPane.showMessageDialog(null, "CLIENT | Vous etes connecter !");
+					}
 					// Si l'utilisateur est un CLIENT OU un ARTISTE - jframe.RESERVATION
 					else{
-						
-					}					
+						JOptionPane.showMessageDialog(null, "CLIENT | Vous etes connecter !");
+					}
 				}
 			}
 		});
-		btn_connect.setBounds(126, 169, 188, 23);
+		btn_connect.setBounds(10, 105, 242, 23);
 		contentPane.add(btn_connect);
-		JLabel lblTitre = new JLabel("Bosquet Wallon");
-		lblTitre.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitre.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblTitre.setBounds(126, 30, 188, 30);
-		contentPane.add(lblTitre);
 		JButton btn_inscription = new JButton("Inscription");
 		btn_inscription.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-
 				fenetre.dispose();
-				Inscription f = new Inscription();
+				JInscription f = new JInscription();
 				f.setVisible(true);
 			}
 		});
-		btn_inscription.setBounds(126, 210, 188, 23);
+		btn_inscription.setBounds(10, 139, 242, 23);
 		contentPane.add(btn_inscription);		
 		txt_password = new JPasswordField();
-		txt_password.setBounds(192, 118, 152, 20);
+		txt_password.setBounds(110, 77, 140, 20);
 		contentPane.add(txt_password);
 	}
 }
