@@ -1,11 +1,18 @@
 package be.lamattina.pojo;
 
+import java.util.List;
+
+import be.lamattina.dao.AbstractDAOFactory;
+import be.lamattina.dao.DAO;
+
 public class Configuration {
+	AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	DAO<Configuration> configurationdao = adf.getConfigurationDAO();
 
 	private int id_configuration;
 	private String type;
 	private String description;
-	private Spectacle id_spectacle;
+	private List<Categorie> categories;
 	
 	public int getId_configuration() {
 		return id_configuration;
@@ -36,17 +43,32 @@ public class Configuration {
 		this.description = description;
 	}
 
-	public Spectacle getId_spectacle() {
-		return id_spectacle;
+
+	public List<Categorie> getCategories() {
+		return categories;
 	}
 
 
-	public void setId_spectacle(Spectacle id_spectacle) {
-		this.id_spectacle = id_spectacle;
+	public void setCategories(List<Categorie> categories) {
+		this.categories = categories;
 	}
-
-
+	
+	
 	public Configuration() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Configuration(String type, String description, List<Categorie> categories) {
+		this.type = type;
+		this.description = description;
+		this.categories = categories;
+	}
+
+
+	public void create() {
+		configurationdao.create(this);
+		for (Categorie cat : this.getCategories()) {
+			cat.create();
+		}
 	}
 }

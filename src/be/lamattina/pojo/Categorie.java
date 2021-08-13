@@ -1,6 +1,11 @@
 package be.lamattina.pojo;
 
+import be.lamattina.dao.AbstractDAOFactory;
+import be.lamattina.dao.DAO;
+
 public class Categorie {
+	AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	DAO<Categorie> categoriedao = adf.getCategorieDAO();
 
 	private int id_categorie;
 	private String type;
@@ -60,5 +65,16 @@ public class Categorie {
 	
 	public Categorie() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public Categorie(String type, float prix, int nbr_place_dispo, int nbr_place_max) {
+		this.type = type;
+		this.prix = prix;
+		this.nbr_place_dispo = nbr_place_dispo;
+		this.nbr_place_max = nbr_place_max;
+	}
+
+	public boolean create() {
+		return categoriedao.create(this);
 	}
 }

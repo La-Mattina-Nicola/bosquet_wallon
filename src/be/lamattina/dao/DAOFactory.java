@@ -10,5 +10,29 @@ public class DAOFactory extends AbstractDAOFactory {
 	public DAO<Utilisateur> getUtilisateurDAO() {
 		return new UtilisateurDAO(conn);
 	}
+	@Override
+	public DAO<Artiste> getArtisteDAO() {
+		return new ArtisteDAO(conn);
+	}
+	@Override
+	public DAO<Spectacle> getSpectacleDAO() {
+		return new SpectacleDAO(conn);
+	}
+	@Override
+	public DAO<Configuration> getConfigurationDAO() {
+		return new ConfigurationDAO(conn);
+	}
+	@Override
+	public DAO<Categorie> getCategorieDAO() {
+		return new CategorieDAO(conn);
+	}
+	@Override
+	public DAO<Reservation> getReservationDAO() {
+		return new ReservationDAO(conn);
+	}
+	@Override
+	public DAO<PlanningSalle> getPlanningSalleDAO() {
+		return new PlanningSalleDAO(conn);
+	}
 	
 }
