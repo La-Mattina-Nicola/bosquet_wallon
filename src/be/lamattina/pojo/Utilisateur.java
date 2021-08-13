@@ -3,7 +3,7 @@ package be.lamattina.pojo;
 import be.lamattina.dao.AbstractDAOFactory;
 import be.lamattina.dao.DAO;
 
-public abstract class Utilisateur {
+public class Utilisateur {
 	AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
 	DAO<Utilisateur> utilisateurdao = adf.getUtilisateurDAO();
 
@@ -74,8 +74,7 @@ public abstract class Utilisateur {
 		this.adresse = adresse;
 	}
 
-	public Utilisateur(String nom, String prenom, String mot_de_passe, String email,
-			String adresse) {
+	public Utilisateur(String nom, String prenom, String mot_de_passe, String email, String adresse) {
 		super();
 		this.nom = nom;
 		this.prenom = prenom;
@@ -87,6 +86,7 @@ public abstract class Utilisateur {
 	public boolean create() {
 		return utilisateurdao.create(this);
 	}
+	
 	public Utilisateur find() {
 		return utilisateurdao.find(this);
 	}

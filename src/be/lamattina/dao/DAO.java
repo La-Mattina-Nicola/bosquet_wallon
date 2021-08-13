@@ -1,6 +1,7 @@
 package be.lamattina.dao;
 
 import java.sql.Connection;
+import java.util.List;
 
 import be.lamattina.pojo.Utilisateur;
 
@@ -21,4 +22,9 @@ public abstract class DAO<T> {
 
 	// Methode utiliser pour pouvoir faire des recherches sur plusieurs champs de l'objet -> cf : Connexion (email/mdp)
 	public abstract T find(T obj);
+
+	public abstract List<T> findall();
+	
+	public abstract T findlast();
+
 }

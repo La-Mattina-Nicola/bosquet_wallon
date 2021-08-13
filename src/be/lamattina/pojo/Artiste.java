@@ -15,4 +15,9 @@ public class Artiste extends Utilisateur {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public String toString() {
+		return this.getNom() + " " + this.getPrenom();
+	}
+
 }

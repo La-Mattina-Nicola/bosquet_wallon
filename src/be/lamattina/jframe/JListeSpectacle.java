@@ -2,6 +2,7 @@ package be.lamattina.jframe;
 
 import java.awt.EventQueue;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,6 +14,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import be.lamattina.pojo.Organisateur;
+import be.lamattina.pojo.Spectacle;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -30,8 +33,7 @@ public class JListeSpectacle extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Organisateur user = null;
-					JListeSpectacle frame = new JListeSpectacle(user);
+					JConnexion frame = new JConnexion();
 					frame.setTitle("Connexion");
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -46,6 +48,8 @@ public class JListeSpectacle extends JFrame {
 	 */
 	@SuppressWarnings("serial")
 	public JListeSpectacle(Organisateur user) {
+		//List<Spectacle> lst_spectacle = user.getListSpectacle();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 510, 290);
 		contentPane = new JPanel();
@@ -74,6 +78,9 @@ public class JListeSpectacle extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//Lancer la frame - CREATION SPECTACLE
+				JCreationSpectacle frame = new JCreationSpectacle(user);
+				frame.setVisible(true);
+				dispose();
 			}
 		});
 		btnNewSpectacle.setBounds(10, 222, 150, 23);

@@ -3,6 +3,7 @@ package be.lamattina.dao;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import be.lamattina.pojo.Utilisateur;
 import be.lamattina.pojo.Artiste;
@@ -84,12 +85,14 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	public Utilisateur find(Utilisateur u) {
 		Utilisateur user = null;
 		try {
+			String query = "SELECT * FROM Utilisateur WHERE email='" + u.getEmail() + "' and mot_de_passe='" + u.getMot_de_passe() + "'";
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery("SELECT * FROM User WHERE email = " + u.getEmail() + " mot_de_passe = " + u.getMot_de_passe());
+					.executeQuery(query);
 			if (result.first()) {
 				// Recupérer utilisateur en fonction de son discriminator : Artiste / Client / Gestionnaire / Organisateur
-				switch (result.getString("discriminator")) {
+				String discriminator = result.getString("type_utilisateur");
+				switch (discriminator) {
 				case "Artiste": 
 					user = new Artiste(result.getInt("id_utilisateur"), result.getString("nom"), result.getString("prenom"), result.getString("mot_de_passe"), result.getString("email"), result.getString("adresse"));
 					break;
@@ -108,6 +111,18 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			return null;
 		}
 		return user;
+	}
+
+	@Override
+	public List<Utilisateur> findall() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Utilisateur findlast() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

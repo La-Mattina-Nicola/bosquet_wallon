@@ -28,7 +28,6 @@ public class JConnexion extends JFrame {
 	private JFrame fenetre = this;
 	private JPasswordField txt_password;
 	
-	private JListeSpectacle creationSpectacle;
 	/**
 	 * Launch the application.
 	 */
@@ -73,13 +72,14 @@ public class JConnexion extends JFrame {
 		txt_id.setBounds(110, 49, 140, 20);
 		contentPane.add(txt_id);
 		txt_id.setColumns(10);
+		
 		JButton btn_connect = new JButton("Connexion");
 		btn_connect.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				String email = String.valueOf(txt_id.getText().toLowerCase());
 				String mdp = String.valueOf(txt_password.getPassword());
 				
-				Utilisateur u = new Client();
+				Utilisateur u = new Utilisateur();
 				u.setEmail(email);
 				u.setMot_de_passe(mdp);
 				
@@ -94,23 +94,27 @@ public class JConnexion extends JFrame {
 						// aver la méthode FIND
 					Utilisateur user = u.find();
 					if (user instanceof Artiste) {
-
-						JOptionPane.showMessageDialog(null, "CLIENT | Vous etes connecter !");
 					}
 					// Si l'utilisateur est l'ORGANISATEUR - gérer le spectacle
 					if (user instanceof Organisateur) {
-						creationSpectacle = new JListeSpectacle((Organisateur) user);
-						fenetre.dispose();
-						creationSpectacle.setVisible(true);
+						//Si l'utilisateur a déjà reserver une salle.
+						Organisateur organisateur = (Organisateur) user;
+						if (organisateur.chargerReservation()) {
+							JListeSpectacle creationSpectacle = new JListeSpectacle((Organisateur) user);
+							creationSpectacle.setVisible(true);
+							dispose();
+						}
+						else {
+							JReservationSalle reservationSalle = new JReservationSalle((Organisateur) user);
+							reservationSalle.setVisible(true);
+							dispose();
+						}
 					}
 					// Si l'utilisateur est un GESTIONNAIRE - jframe correspondant
 					else if (user instanceof Gestionnaire) {
-
-						JOptionPane.showMessageDialog(null, "CLIENT | Vous etes connecter !");
 					}
 					// Si l'utilisateur est un CLIENT OU un ARTISTE - jframe.RESERVATION
-					else{
-						JOptionPane.showMessageDialog(null, "CLIENT | Vous etes connecter !");
+					else if (user instanceof Client){
 					}
 				}
 			}
@@ -131,5 +135,11 @@ public class JConnexion extends JFrame {
 		txt_password = new JPasswordField();
 		txt_password.setBounds(110, 77, 140, 20);
 		contentPane.add(txt_password);
+		
+
+		///////////
+		txt_id.setText("organisateur@hotmail.com");
+		txt_password.setText("1234");
+		///////////
 	}
 }
