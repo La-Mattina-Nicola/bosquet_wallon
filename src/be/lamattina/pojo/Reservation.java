@@ -101,6 +101,8 @@ public class Reservation {
 	public void create(Organisateur organisateur) {
 		// SET ID_SALLE
 		this.id_salle.create();
+		PlanningSalle ps = this.getId_salle().getlast();
+		this.setId_salle(ps);
 		reservationDAO.create(this);
 	}
 
@@ -142,7 +144,7 @@ public class Reservation {
 		//Charger planning
 		for(Reservation r : lst_reservation) {
 			r.setId_organisateur(o);
-			r.getId_salle().getId();
+			r.setId_salle(r.getId_salle().getId());
 		}
 		return lst_reservation;
 	}

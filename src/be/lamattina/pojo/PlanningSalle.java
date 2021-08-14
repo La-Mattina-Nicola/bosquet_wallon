@@ -1,5 +1,6 @@
 package be.lamattina.pojo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class PlanningSalle {
 	private Date date_debut;
 	private Date date_fin;
 	private List<Spectacle> spectacles;
+	Spectacle s = new Spectacle();
 
 	public int getId_planning_salle() {
 		return id_planning_salle;
@@ -117,16 +119,23 @@ public class PlanningSalle {
 	
 	public PlanningSalle getId() {
 		PlanningSalle ps = planningsalleDAO.find(this.id_planning_salle);
-		ps.loadSpectacle();
-		return ps;
-	}
-	
-	public void loadSpectacle() {
-		Spectacle s = new Spectacle();
-		this.spectacles = s.loadSpectacle(this.id_planning_salle);
-		for(Spectacle spec : this.spectacles) {
-			spec.setId_salle(this);
+		if (ps == null) {
+			return null;
 		}
+		else {
+			List<Spectacle> lst_spectacle = new ArrayList<Spectacle>();
+			this.spectacles = s.loadSpectacle(this.id_planning_salle);
+			for(Spectacle spec : this.spectacles) {
+				spec.setId_salle(this);
+				lst_spectacle.add(spec);
+			}
+			ps.setSpectacles(lst_spectacle);
+			return ps;
+		}
+	}
+
+	public void addSpectacle(Spectacle s) {
+		s.create();
 	}
 
 }

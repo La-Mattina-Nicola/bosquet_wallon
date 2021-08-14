@@ -13,6 +13,7 @@ public class Configuration {
 	private String type;
 	private String description;
 	private List<Categorie> categories;
+	private int id_spectacle;
 	
 	public int getId_configuration() {
 		return id_configuration;
@@ -57,7 +58,17 @@ public class Configuration {
 	public Configuration() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	public Configuration(String type, String description) {
+		this.type = type;
+		this.description = description;
+	}
+	public Configuration(int id_configuration, String type, String description, int id_spectacle) {
+		this.id_configuration = id_configuration;
+		this.type = type;
+		this.description = description;
+		this.id_spectacle = id_spectacle;
+	}
 	public Configuration(String type, String description, List<Categorie> categories) {
 		this.type = type;
 		this.description = description;
@@ -67,8 +78,29 @@ public class Configuration {
 
 	public void create() {
 		configurationdao.create(this);
+		//Recup l'id
+		Configuration c = configurationdao.findlast();
+		this.setId_configuration(c.getId_configuration());
 		for (Categorie cat : this.getCategories()) {
+			cat.setId_configuration(this);
+			cat.getId_configuration().setId_configuration(c.getId_configuration());
 			cat.create();
 		}
+	}
+
+
+	public void update(PlanningSalle id_salle) {
+		// TODO Auto-generated method stub
+		configurationdao.update(this);
+	}
+
+
+	public int getId_spectacle() {
+		return id_spectacle;
+	}
+
+
+	public void setId_spectacle(int id_spectacle) {
+		this.id_spectacle = id_spectacle;
 	}
 }

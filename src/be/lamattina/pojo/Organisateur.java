@@ -27,10 +27,6 @@ public class Organisateur extends Utilisateur {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void addSpectacle(Spectacle s) {
-		s.create();
-	}
-
 	public List<Reservation> getReservations() {
 		return reservations;
 	}
@@ -40,21 +36,17 @@ public class Organisateur extends Utilisateur {
 	}
 	
 	public void creerReservation(Reservation r) {
+		r.setId_organisateur(this);
 		r.create(this);
+		
 		PlanningSalle ps = r.getId_salle().getlast();
 		r.setId_salle(ps);
 		r.update(ps);
 	}
 
-	public boolean chargerReservation() {
+	public void chargerReservation() {
 		Reservation r = new Reservation();
-		
-		if(this.reservations.size() == 0)
-			return false;
-		else {
-			this.reservations = r.getAll(this);
-			return true;
-		}
+		this.reservations = r.getAll(this);
 	}
 	public Reservation getReservation() {
 		return reservation;

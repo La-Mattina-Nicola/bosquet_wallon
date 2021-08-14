@@ -77,4 +77,9 @@ public class Categorie {
 	public boolean create() {
 		return categoriedao.create(this);
 	}
+
+	public void update(int id_configuration2) {
+		categoriedao.update(this);
+		
+	}
 }

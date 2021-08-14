@@ -17,16 +17,16 @@ public class CategorieDAO extends DAO<Categorie> {
 	@Override
 	public boolean create(Categorie obj) {
 		// TODO Auto-generated method stub
+		String query = "INSERT INTO Categorie (type, prix, nbr_place_dispo, nbr_place_max, id_configuration)"
+				+ "Values('"
+					+ obj.getType() + "',"
+					+ obj.getPrix() + ",'"
+					+ obj.getNbr_place_dispo() + "','"
+					+ obj.getNbr_place_max() + "','"
+					+ obj.getId_configuration().getId_configuration() + "')";
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate(
-							"INSERT INTO Categorie (type, prix, nbr_place_dispo, nbr_place_max)"
-							+ "Values('"
-								+ obj.getType() + "','"
-								+ obj.getPrix() + "','"
-								+ obj.getNbr_place_dispo() + "','"
-								+ obj.getNbr_place_max() + "','"
-								+ "')");
+					.executeUpdate(query);
 			return true;
 		} catch (SQLException e) {
 			return false;

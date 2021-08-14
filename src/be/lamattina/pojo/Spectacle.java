@@ -91,6 +91,17 @@ public class Spectacle {
 		this.configuration = configuration;
 		this.id_salle = id_salle;
 	}
+	public Spectacle(int id_spectacle, String titre, int nbr_place_max, PlanningSalle id_salle) {
+		this.id_spectacle = id_spectacle;
+		this.titre = titre;
+		this.nbr_place_max = nbr_place_max;
+		this.id_salle = id_salle;
+	}
+	public Spectacle(int id_spectacle, String titre, int nbr_place_max) {
+		this.id_spectacle = id_spectacle;
+		this.titre = titre;
+		this.nbr_place_max = nbr_place_max;
+	}
 
 	public Spectacle(String titre, int nbr_place_max, List<Artiste> liste_artistes,
 			Configuration configuration, PlanningSalle id_salle) {
@@ -115,12 +126,13 @@ public class Spectacle {
 	public void create() {
 		//On crée d'abord le spectacle - ensuite on crée les sous-objets
 		spectacleDAO.create(this);
-		this.addConfiguration();
+		Spectacle s = spectacleDAO.findlast();
+		this.setId_spectacle(s.getId_spectacle());
+		this.getConfiguration().setId_spectacle(this.getId_spectacle());
+		this.getConfiguration().create();
+		this.getConfiguration().update(this.getId_salle());
 	}
 
-	public void addConfiguration() {
-		this.getConfiguration().create();
-	}
 	
 	public List<Spectacle> loadSpectacle(int id_salle) {
 		return spectacleDAO.findall(id_salle);

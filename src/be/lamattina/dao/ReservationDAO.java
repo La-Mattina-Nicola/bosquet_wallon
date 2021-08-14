@@ -68,7 +68,8 @@ public class ReservationDAO extends DAO<Reservation> {
 			String query = "SELECT * from Reservation WHERE id_organisateur = " + id_utilisateur + ";";
 			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery(query);
-				while(result.next()) {					
+				while(result.next()) {		
+					
 					Reservation r = new Reservation(
 							result.getInt("id_reservation"),
 							result.getDouble("solde"),

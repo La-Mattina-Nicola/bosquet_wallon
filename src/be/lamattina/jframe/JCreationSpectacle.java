@@ -33,7 +33,6 @@ public class JCreationSpectacle extends JFrame {
 	private JList<Artiste> LstArtiste;
 	private List<Artiste> artistes = new ArrayList<Artiste>();
 	
-	private Spectacle s = new Spectacle();
 	/**
 	 * Launch the application.
 	 */
@@ -53,13 +52,14 @@ public class JCreationSpectacle extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JCreationSpectacle(Organisateur organisateur) {
+	public JCreationSpectacle(Reservation r) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 395);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		Spectacle s = new Spectacle();
 
 		JLabel lblNewLabel = new JLabel("Titre du spectacle:");
 		lblNewLabel.setBounds(10, 10, 155, 13);
@@ -238,19 +238,20 @@ public class JCreationSpectacle extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(txt_titre.getText() != null && LstArtisteSelected != null) {
 					// En fonction de la configuration selectionnée
-					s.setTitre(txt_titre.getText());
-					s.setListe_artistes(artistes);
+					Spectacle spectacle = new Spectacle();
 					Configuration configuration = new Configuration();
 					List<Categorie> lst_categories = new ArrayList<Categorie>();
 					if(RadioDebout.isSelected()) {
 						lst_categories.add(new Categorie("Debout", Float.valueOf(txt_debout.getText()), 8000, 8000));
 						configuration = new Configuration("Debout", "Tout le monde est debout !", lst_categories);
+						spectacle = new Spectacle(txt_titre.getText(), 8000, artistes, configuration, r.getId_salle());
 					}
 					else if (RadioConcert.isSelected()) {
 						lst_categories.add(new Categorie("Bronze", 	Float.valueOf(txt_bronze.getText()), 3000, 3000));
 						lst_categories.add(new Categorie("Argent", 	Float.valueOf(txt_argent.getText()), 1500, 1500));
 						lst_categories.add(new Categorie("Or", 		Float.valueOf(txt_or.getText()),  	  500,  500));
-						configuration = new Configuration("Concert", "Idéal pour un concert", lst_categories);						
+						configuration = new Configuration("Concert", "Idéal pour un concert", lst_categories);
+						spectacle = new Spectacle(txt_titre.getText(), 5000, artistes, configuration, r.getId_salle());
 					}
 					else if (RadioCirque.isSelected()) {
 						lst_categories.add(new Categorie("Bronze", 	Float.valueOf(txt_bronze.getText()), 1500, 1500));
@@ -258,14 +259,17 @@ public class JCreationSpectacle extends JFrame {
 						lst_categories.add(new Categorie("Or", 		Float.valueOf(txt_or.getText()),  	 2000, 2000));
 						lst_categories.add(new Categorie("Diamant",	Float.valueOf(txt_or.getText()),  	 1000, 1000));
 						configuration = new Configuration("Cirque", "Les clowns sont de sorties", lst_categories);
+						spectacle = new Spectacle(txt_titre.getText(), 6000, artistes, configuration, r.getId_salle());
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Selectionner une configuration !");
 					}
-					s.setConfiguration(configuration);
+					// reservation -> salle -> planing -> spectacle
 					JOptionPane.showMessageDialog(null, "Création du spectacle");
-					// orga -> salle -> planing -> spectacle
-					organisateur.addSpectacle(s);
+					r.getId_salle().addSpectacle(spectacle);
+					JListeSpectacle frame = new JListeSpectacle(r.getId_organisateur());
+					frame.setVisible(true);
+					dispose();
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Veuillez renseigner les différents champs !");					

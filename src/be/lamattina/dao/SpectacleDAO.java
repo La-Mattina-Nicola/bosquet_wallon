@@ -21,15 +21,15 @@ public class SpectacleDAO extends DAO<Spectacle>{
 	@Override
 	public boolean create(Spectacle obj) {
 		// TODO Auto-generated method stub
+		String query = "INSERT INTO Spectacle (titre, nbr_place_max, id_salle) " +
+				"VALUES ('"
+					+ obj.getTitre() + "', '"
+					+ obj.getNbr_place_max() + "', '"
+					+ obj.getId_salle().getId_planning_salle() + "')";
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate(
-							"INSERT INTO Spectacle (titre, nbr_place_max, id_salle)"
-							+ "Values('"
-								+ obj.getTitre() + "','"
-								+ obj.getNbr_place_max() + "','"
-								+ obj.getId_salle() + "','"
-								+ "')");
+					.executeUpdate(query);
+			
 			return true;
 		} catch (SQLException e) {
 			return false;
@@ -68,8 +68,19 @@ public class SpectacleDAO extends DAO<Spectacle>{
 
 	@Override
 	public Spectacle findlast() {
-		// TODO Auto-generated method stub
-		return null;
+		Spectacle s = new Spectacle();
+		try {
+			String query = "SELECT * FROM Spectacle ORDER BY id_spectacle DESC;";
+			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery(query);
+				while(result.next()) {
+					s = new Spectacle(result.getInt("id_spectacle"), result.getString("titre"), result.getInt("nbr_place_max"));
+				}
+			return s;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
@@ -80,7 +91,7 @@ public class SpectacleDAO extends DAO<Spectacle>{
 			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery(query);
 				while(result.next()) {
-					Spectacle s = new Spectacle();
+					Spectacle s = new Spectacle(result.getInt("id_spectacle"), result.getString("titre"), result.getInt("nbr_place_max"));
 					lst_spectacle.add(s);
 				}
 			return lst_spectacle;

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import be.lamattina.pojo.PlanningSalle;
@@ -45,20 +46,39 @@ public class PlanningSalleDAO extends DAO<PlanningSalle> {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public PlanningSalle find(int id) {
 		PlanningSalle ps = new PlanningSalle();
+		Date debut = new Date();
+		Date fin = new Date();
 		try {
-			String query = "SELECT * from Planning_salle WHERE id_planning_salle=" + id;
+			String query = "SELECT * FROM Planning_salle WHERE id_planning_salle = '" + id + "';";
 			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery(query);
-				while(result.first()) {
-					ps = new PlanningSalle(result.getInt("id_planning_salle"), result.getDate("date_debut"),result.getDate("date_fin"));
+				while(result.next()) {
+					String s_debut = result.getTimestamp("date_debut").toString();
+					String[] date_debut = s_debut.split(" ");
+					String de_debut[] = date_debut[0].split("-");
+					debut.setYear(Integer.parseInt(de_debut[0]));
+					debut.setMonth(Integer.parseInt(de_debut[1]));
+					debut.setDate(Integer.parseInt(de_debut[2]));
+					debut.setHours(12);
+					String s_fin = result.getTimestamp("date_fin").toString();
+					String[] date_fin = s_fin.split(" ");
+					String de_fin[] = date_fin[0].split("-");
+					fin.setYear(Integer.parseInt(de_fin[0]));
+					fin.setMonth(Integer.parseInt(de_fin[1]));
+					fin.setDate(Integer.parseInt(de_fin[2]));
+					fin.setHours(12);
+					
+					ps = new PlanningSalle( result.getInt("id_planning_salle"), debut, fin);
 				}
+			return ps;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return ps;
 	}
 
 	@Override
@@ -69,7 +89,7 @@ public class PlanningSalleDAO extends DAO<PlanningSalle> {
 			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery(query);
 				while(result.next()) {
-					PlanningSalle ps = new PlanningSalle(result.getInt("id_planning_salle"), result.getDate("date_debut"),result.getDate("date_fin"));
+					PlanningSalle ps = new PlanningSalle(result.getInt("id_planning_salle"), result.getTimestamp("date_debut"),result.getTimestamp("date_fin"));
 					lst_planning.add(ps);
 				}
 		} catch (SQLException e) {
@@ -78,16 +98,33 @@ public class PlanningSalleDAO extends DAO<PlanningSalle> {
 		return lst_planning;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public PlanningSalle findlast() {
 		// TODO Auto-generated method stub
 		PlanningSalle ps = new PlanningSalle();
+		Date debut = new Date();
+		Date fin = new Date();
 		try {
 			String query = "SELECT * FROM Planning_salle ORDER BY id_planning_salle DESC";
 			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery(query);
 				while(result.first()) {
-					ps = new PlanningSalle(result.getInt("id_planning_salle"), result.getDate("date_debut"), result.getDate("date_fin"));
+					String s_debut = result.getTimestamp("date_debut").toString();
+					String[] date_debut = s_debut.split(" ");
+					String de_debut[] = date_debut[0].split("-");
+					debut.setYear(Integer.parseInt(de_debut[0]));
+					debut.setMonth(Integer.parseInt(de_debut[1]));
+					debut.setDate(Integer.parseInt(de_debut[2]));
+					debut.setHours(12);
+					String s_fin = result.getTimestamp("date_fin").toString();
+					String[] date_fin = s_fin.split(" ");
+					String de_fin[] = date_fin[0].split("-");
+					fin.setYear(Integer.parseInt(de_fin[0]));
+					fin.setMonth(Integer.parseInt(de_fin[1]));
+					fin.setDate(Integer.parseInt(de_fin[2]));
+					fin.setHours(12);
+					ps = new PlanningSalle(result.getInt("id_planning_salle"), debut, fin);
 					break;
 				}
 		} catch (SQLException e) {

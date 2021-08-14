@@ -47,7 +47,7 @@ public class JConnexion extends JFrame {
 	 */
 	public JConnexion() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 275, 210);
+		setBounds(100, 100, 400, 210);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -57,7 +57,7 @@ public class JConnexion extends JFrame {
 		JLabel lblTitre = new JLabel("Bosquet Wallon");
 		lblTitre.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitre.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblTitre.setBounds(10, 11, 242, 30);
+		lblTitre.setBounds(10, 11, 364, 30);
 		contentPane.add(lblTitre);
 		JLabel lbl_identify = new JLabel("Email : ");
 		lbl_identify.setBounds(20, 52, 100, 14);
@@ -66,7 +66,7 @@ public class JConnexion extends JFrame {
 		lbl_password.setBounds(20, 80, 100, 14);
 		contentPane.add(lbl_password);
 		txt_id = new JTextField();
-		txt_id.setBounds(110, 49, 140, 20);
+		txt_id.setBounds(174, 49, 200, 20);
 		contentPane.add(txt_id);
 		txt_id.setColumns(10);
 		
@@ -96,10 +96,11 @@ public class JConnexion extends JFrame {
 					if (user instanceof Organisateur) {
 						//Si l'utilisateur a déjà reserver une salle.
 						Organisateur organisateur = (Organisateur) user;
-						if (organisateur.chargerReservation()) {
+						organisateur.chargerReservation();
+						if (organisateur.getReservations().size() > 0) {
+							dispose();
 							JListeSpectacle creationSpectacle = new JListeSpectacle((Organisateur) user);
 							creationSpectacle.setVisible(true);
-							dispose();
 						}
 						else {
 							JReservationSalle reservationSalle = new JReservationSalle((Organisateur) user);
@@ -116,7 +117,7 @@ public class JConnexion extends JFrame {
 				}
 			}
 		});
-		btn_connect.setBounds(10, 105, 242, 23);
+		btn_connect.setBounds(10, 105, 364, 23);
 		contentPane.add(btn_connect);
 		JButton btn_inscription = new JButton("Inscription");
 		btn_inscription.addMouseListener(new MouseAdapter() {
@@ -127,10 +128,10 @@ public class JConnexion extends JFrame {
 				f.setVisible(true);
 			}
 		});
-		btn_inscription.setBounds(10, 139, 242, 23);
+		btn_inscription.setBounds(10, 139, 364, 23);
 		contentPane.add(btn_inscription);		
 		txt_password = new JPasswordField();
-		txt_password.setBounds(110, 77, 140, 20);
+		txt_password.setBounds(174, 77, 200, 20);
 		contentPane.add(txt_password);
 		
 
