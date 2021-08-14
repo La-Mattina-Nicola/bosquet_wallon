@@ -15,9 +15,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import be.lamattina.dao.AbstractDAOFactory;
-import be.lamattina.dao.DAO;
-import be.lamattina.dao.UtilisateurDAO;
 import be.lamattina.pojo.*;
 
 @SuppressWarnings("serial")

@@ -1,6 +1,5 @@
 package be.lamattina.jframe;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.*;
 import java.sql.Date;
@@ -17,14 +16,13 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JCalendar;
 
 import be.lamattina.pojo.Organisateur;
 import be.lamattina.pojo.PlanningSalle;
 import be.lamattina.pojo.Reservation;
-import be.lamattina.pojo.Spectacle;
 
+@SuppressWarnings("serial")
 public class JReservationSalle extends JFrame {
 	private JPanel contentPane;
 	Date dateDebut = null;
@@ -57,9 +55,11 @@ public class JReservationSalle extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("deprecation")
 	public JReservationSalle(Organisateur o) {
 		r.setId_salle(planning);
 		r.setId_organisateur(o);
+		o.setReservation(r);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 240, 340);
@@ -79,7 +79,6 @@ public class JReservationSalle extends JFrame {
 	    	int jour_debut = ps.getDate_debut().getDate()+1;
 	    	int jour_fin = ps.getDate_fin().getDate()-1;
 	    	Date dateDebut = new Date(ps.getDate_debut().getYear(), ps.getDate_debut().getMonth(), jour_debut);
-	    	Date dated = new Date(jour_fin, jour_fin, jour_fin);
 	    	Date dateFin = new Date(ps.getDate_fin().getYear(), ps.getDate_fin().getMonth(), jour_fin);
 			evaluator.setStartDate(dateDebut);
 		    evaluator.setEndDate(dateFin);
@@ -127,8 +126,10 @@ public class JReservationSalle extends JFrame {
 		contentPane.add(BtnNon);
 		BtnNon.setVisible(false);
 
-		JButton BtnValider = new JButton("Valider la date de début");
-		BtnValider.addActionListener(new ActionListener() {
+		JButton BtnValider_datedebut = new JButton("Valider la date de début");
+		JButton BtnValider_datefin = new JButton("Valider la date de fin");
+		
+		BtnValider_datedebut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (dateDebut == null) {
 					dateDebut = new java.sql.Date(calendar.getDate().getTime());
@@ -140,12 +141,22 @@ public class JReservationSalle extends JFrame {
 					else
 					{
 						LblDateDebut.setText(dateFormat.format(dateDebut));
-						r.getId_salle().setDate_debut(dateDebut);
+						o.getReservation().getId_salle().setDate_debut(dateDebut);
+						BtnValider_datedebut.setVisible(false);
+						BtnValider_datefin.setVisible(true);
 					}
 				}
-				if (dateFin == null && dateDebut!=null) 
-				{	
-					BtnValider.setText("Valider la date de fin");
+			}
+
+		});
+		BtnValider_datedebut.setBounds(10, 245, 206, 21);
+		contentPane.add(BtnValider_datedebut);
+		
+		
+		BtnValider_datefin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (dateFin == null) 
+				{
 					dateFin = new java.sql.Date(calendar.getDate().getTime());
 					if(dateDebut.after(dateFin) || dateFin.equals(dateDebut))
 					{
@@ -153,23 +164,24 @@ public class JReservationSalle extends JFrame {
 					}
 					else
 					{
+						o.getReservation().getId_salle().setDate_fin(dateFin);
 						LblDateFin.setText(dateFormat.format(dateFin));
-						BtnValider.setVisible(false);
+						BtnValider_datedebut.setVisible(false);
+						BtnValider_datefin.setVisible(false);
 						LblConfirmer.setVisible(true);
 						BtnOui.setVisible(true);
 						BtnNon.setVisible(true);
-						
-						r.getId_salle().setDate_fin(dateFin);
-						r.calculerPrix();
-						String paye = String.valueOf(r.getSolde()) + " €";
+						o.getReservation().calculerPrix();
+						String paye = String.valueOf(o.getReservation().getSolde()) + " €";
 						lblPrix.setText(paye);
 					}
 				}
 			}
 
 		});
-		BtnValider.setBounds(10, 245, 206, 21);
-		contentPane.add(BtnValider);
+		BtnValider_datefin.setBounds(10, 245, 206, 21);
+		contentPane.add(BtnValider_datefin);
+		BtnValider_datefin.setVisible(false);
 
 		BtnNon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -177,7 +189,8 @@ public class JReservationSalle extends JFrame {
 				dateFin=null;
 				LblDateDebut.setText("");
 				LblDateFin.setText("");
-				BtnValider.setVisible(true);
+				BtnValider_datedebut.setVisible(true);
+				BtnValider_datefin.setVisible(false);
 				LblConfirmer.setVisible(false);
 				BtnOui.setVisible(false);
 				BtnNon.setVisible(false);
@@ -186,13 +199,9 @@ public class JReservationSalle extends JFrame {
 
 		BtnOui.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PlanningSalle ps = new PlanningSalle((java.sql.Date)dateDebut, (java.sql.Date)dateFin);
 				//Set date selectionnée
-				if(ps.verifierdisponibilite()) {
-					
-					r.setId_salle(planning);
-					r.setId_organisateur(o);
-					
+				if(o.getReservation().getId_salle().verifierdisponibilite()) {
+					r.setId_organisateur(o);					
 					// CREATION DE LA RESERVATION
 					o.creerReservation(r);
 					//Afficher la liste des spectacle
@@ -208,7 +217,7 @@ public class JReservationSalle extends JFrame {
 					dateFin = null;
 					LblDateDebut.setText("");
 					LblDateFin.setText("");
-					BtnValider.setVisible(true);
+					BtnValider_datedebut.setVisible(true);
 					LblConfirmer.setVisible(false);
 					BtnOui.setVisible(false);
 					BtnNon.setVisible(false);					

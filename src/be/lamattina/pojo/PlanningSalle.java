@@ -13,7 +13,7 @@ public class PlanningSalle {
 	private int id_planning_salle;
 	private Date date_debut;
 	private Date date_fin;
-	private List<Spectacle> lst_spectacle;
+	private List<Spectacle> spectacles;
 
 	public int getId_planning_salle() {
 		return id_planning_salle;
@@ -39,31 +39,51 @@ public class PlanningSalle {
 		this.date_fin = date_fin;
 	}
 
+	public List<Spectacle> getSpectacles() {
+		return spectacles;
+	}
+
+	public void setSpectacles(List<Spectacle> spectacles) {
+		this.spectacles = spectacles;
+	}
+	
+	public void create() {		
+		planningsalleDAO.create(this);
+	}
 
 	public PlanningSalle() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public PlanningSalle(int id_planning_salle) {
+		this.id_planning_salle = id_planning_salle;
+	}
+	
 	public PlanningSalle(int id_planning_salle, Date date_debut, Date date_fin) {
 		this.id_planning_salle = id_planning_salle;
 		this.date_debut = date_debut;
 		this.date_fin = date_fin;
 	}
+	public PlanningSalle(int id_planning_salle, Date date_debut, Date date_fin, List<Spectacle> spectacles) {
+		this.id_planning_salle = id_planning_salle;
+		this.date_debut = date_debut;
+		this.date_fin = date_fin;
+		this.spectacles = spectacles;
+	}
 	public PlanningSalle(Date date_debut, Date date_fin) {
 		this.date_debut = date_debut;
 		this.date_fin = date_fin;
 	}
-	public void create() {		
-		planningsalleDAO.create(this);
-	}
 
+	@SuppressWarnings("deprecation")
 	public boolean verifierdisponibilite() {
 		// Recup la liste des salles
 		boolean verif = false;
-		Date date_debut_this = new Date(this.date_debut.getYear(), this.date_debut.getMonth(), this.date_debut.getDate());
-		Date date_fin_this = new Date(this.date_fin.getYear(), this.date_fin.getYear(), this.date_fin.getDate());
 		
-		long date_debut_verif_this = date_debut.getTime();
-		long date_fin_verif_this = date_fin.getTime();
+		Date date_verif_debut = new Date(this.date_debut.getYear(), this.date_debut.getMonth(), this.date_debut.getDate());
+		Date date_verif_fin = new Date(this.date_fin.getYear(), this.date_fin.getYear(), this.date_fin.getDate());
+		long this_date_debut = date_verif_debut.getTime();
+		long this_date_fin = date_verif_fin.getTime();
 		
 		List<PlanningSalle> lst_planning = planningsalleDAO.findall();
 		
@@ -74,15 +94,14 @@ public class PlanningSalle {
 			for (PlanningSalle ps : lst_planning) {
 				Date date_debut = new Date(ps.date_debut.getYear(), ps.date_debut.getMonth(), ps.date_debut.getDate());
 				Date date_fin = new Date(ps.date_fin.getYear(), ps.date_fin.getMonth(), ps.date_fin.getDate());
-				long date_debut_verif = date_debut.getTime();
-				long date_fin_verif = date_fin.getTime();
-				
-				if((date_debut_verif > date_debut_verif_this && date_debut_verif < date_fin_verif) ||
-					(date_fin_verif_this > date_debut_verif && date_fin_verif_this < date_fin_verif) ||
-					(date_debut_verif_this < date_debut_verif && date_fin_verif_this > date_fin_verif))
+				long ps_date_debut = date_debut.getTime();
+				long ps_date_fin = date_fin.getTime();
+				if(	(this_date_debut > ps_date_debut && this_date_debut < ps_date_fin) ||
+					(this_date_fin > ps_date_debut && this_date_fin < ps_date_fin) ||
+					(this_date_debut < ps_date_debut && this_date_fin > ps_date_fin) )
 					return false;
 				else {
-					if(date_debut_verif_this == date_debut_verif && date_fin_verif_this == date_fin_verif)
+					if(this_date_debut == ps_date_debut && this_date_debut == ps_date_fin)
 						return false;
 					else
 						verif = true;
@@ -95,4 +114,19 @@ public class PlanningSalle {
 	public PlanningSalle getlast() {
 		return planningsalleDAO.findlast();
 	}
+	
+	public PlanningSalle getId() {
+		PlanningSalle ps = planningsalleDAO.find(this.id_planning_salle);
+		ps.loadSpectacle();
+		return ps;
+	}
+	
+	public void loadSpectacle() {
+		Spectacle s = new Spectacle();
+		this.spectacles = s.loadSpectacle(this.id_planning_salle);
+		for(Spectacle spec : this.spectacles) {
+			spec.setId_salle(this);
+		}
+	}
+
 }

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JSpinner;
 
 @SuppressWarnings("serial")
 public class JCreationSpectacle extends JFrame {

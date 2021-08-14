@@ -67,4 +67,10 @@ public class ConfigurationDAO extends DAO<Configuration> {
 		return null;
 	}
 
+	@Override
+	public List<Configuration> findall(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

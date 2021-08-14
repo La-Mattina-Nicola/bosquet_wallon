@@ -19,11 +19,9 @@ import be.lamattina.pojo.Spectacle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+@SuppressWarnings("serial")
 public class JListeSpectacle extends JFrame {
 	private JTable table;
-	private JButton BtnCreerReservation;
-	private JButton BtnCreerRepresentation;
-	private JButton BtnPayer;
 	private JPanel contentPane;
 
 	/**
@@ -63,11 +61,30 @@ public class JListeSpectacle extends JFrame {
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Statut", "Titre","Date de début", "Date de fin"}));
+		
+		//Création des lignes
+		
+		// Orga.List<Reservation>
+		user.chargerReservation();
+		for (var i : user.getReservations()) {
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
+			
+			// Reservation.PlanningSalle.List<Spectacle>
+			for (var j : i.getId_salle().getSpectacles()) {
+				Object[] row = new Object[] {
+					i.getStatus(),
+					j.getTitre(),
+					i.getId_salle().getDate_debut(),
+					i.getId_salle().getDate_fin()
+				};
+				model.addRow(row);
+			}
+		}
+		
 		table.getColumnModel().getColumn(0).setPreferredWidth(15);
 		table.getColumnModel().getColumn(1).setPreferredWidth(220);
 		table.getColumnModel().getColumn(2).setPreferredWidth(50);
 		table.getColumnModel().getColumn(3).setPreferredWidth(50);
-
 		scrollPane.setViewportView(table);
 		// recherche liste spectacle
 			// pour chaque spectacle - creer ligne

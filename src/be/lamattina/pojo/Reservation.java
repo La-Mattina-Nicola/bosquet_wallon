@@ -1,6 +1,8 @@
 package be.lamattina.pojo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import be.lamattina.dao.*;
 
@@ -25,6 +27,23 @@ public class Reservation {
 		this.paye = 0;
 		this.status = "Faux";
 		this.id_organisateur = id_organisateur;
+		this.id_salle = id_salle;
+	}
+
+	public Reservation(int id_reservation, double solde, double paye, String status, Organisateur id_organisateur, PlanningSalle id_salle) {
+		this.id_reservation = id_reservation;
+		this.solde = solde;
+		this.paye = paye;
+		this.status = status;
+		this.id_organisateur = id_organisateur;
+		this.id_salle = id_salle;
+	}
+	
+	public Reservation(int id_reservation, double solde, double paye, String status, PlanningSalle id_salle) {
+		this.id_reservation = id_reservation;
+		this.solde = solde;
+		this.paye = paye;
+		this.status = status;
 		this.id_salle = id_salle;
 	}
 
@@ -85,10 +104,12 @@ public class Reservation {
 		reservationDAO.create(this);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void calculerPrix() {
 		double prix = 0;
 		int compteur = 0;
-		Date d = this.id_salle.getDate_debut();
+		Date d = new Date(this.id_salle.getDate_debut().getYear(), this.id_salle.getDate_debut().getMonth(), this.id_salle.getDate_debut().getDate());
+		Date f = new Date(this.id_salle.getDate_fin().getYear(), this.id_salle.getDate_fin().getMonth(), this.id_salle.getDate_fin().getDate());
 		do {
 			if(d.getDay() - 1 >= 0 && d.getDay()-1 < 5)
 				prix += 3000;
@@ -96,7 +117,7 @@ public class Reservation {
 				prix += 4500;
 			d.setDate(d.getDate()+1);
 			compteur += 1;
-		}while(d.before(this.id_salle.getDate_fin()));
+		}while(d.before(f));
 		
 		//Calcul du tarif dégressif.
 		if(compteur == 2)
@@ -114,6 +135,16 @@ public class Reservation {
 		// TODO Auto-generated method stub
 		this.setId_salle(ps);
 		reservationDAO.update(this);
+	}
+	
+	public List<Reservation> getAll(Organisateur o){
+		List<Reservation> lst_reservation = reservationDAO.findall(o.getId_utilisateur());
+		//Charger planning
+		for(Reservation r : lst_reservation) {
+			r.setId_organisateur(o);
+			r.getId_salle().getId();
+		}
+		return lst_reservation;
 	}
 
 }

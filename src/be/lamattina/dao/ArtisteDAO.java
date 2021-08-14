@@ -36,12 +36,6 @@ public class ArtisteDAO extends DAO<Artiste> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public Artiste find(Artiste obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	public List<Artiste> findall() {
 		List<Artiste> artistes = new ArrayList<Artiste>();
@@ -67,6 +61,18 @@ public class ArtisteDAO extends DAO<Artiste> {
 
 	@Override
 	public Artiste findlast() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Artiste> findall(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Artiste find(Artiste obj) {
 		// TODO Auto-generated method stub
 		return null;
 	}

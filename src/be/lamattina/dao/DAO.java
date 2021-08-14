@@ -3,8 +3,11 @@ package be.lamattina.dao;
 import java.sql.Connection;
 import java.util.List;
 
+import be.lamattina.pojo.Organisateur;
+import be.lamattina.pojo.Reservation;
 import be.lamattina.pojo.Utilisateur;
 
+@SuppressWarnings("unused")
 public abstract class DAO<T> {
 	protected Connection connect = null;
 	
@@ -24,6 +27,8 @@ public abstract class DAO<T> {
 	public abstract T find(T obj);
 
 	public abstract List<T> findall();
+	
+	public abstract List<T> findall(int id);
 	
 	public abstract T findlast();
 

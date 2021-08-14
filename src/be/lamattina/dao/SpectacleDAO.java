@@ -3,8 +3,12 @@ package be.lamattina.dao;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import be.lamattina.pojo.Organisateur;
+import be.lamattina.pojo.PlanningSalle;
+import be.lamattina.pojo.Reservation;
 import be.lamattina.pojo.Spectacle;
 
 public class SpectacleDAO extends DAO<Spectacle>{
@@ -66,6 +70,24 @@ public class SpectacleDAO extends DAO<Spectacle>{
 	public Spectacle findlast() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Spectacle> findall(int id) {
+		List<Spectacle> lst_spectacle = new ArrayList<Spectacle>();
+		try {
+			String query = "SELECT * from Spectacle WHERE id_salle = " + id + ";";
+			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery(query);
+				while(result.next()) {
+					Spectacle s = new Spectacle();
+					lst_spectacle.add(s);
+				}
+			return lst_spectacle;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

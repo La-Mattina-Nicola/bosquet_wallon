@@ -1,6 +1,5 @@
 package be.lamattina.pojo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import be.lamattina.dao.AbstractDAOFactory;
@@ -10,8 +9,7 @@ public class Spectacle {
 	AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
 	DAO<Artiste> artistedao = adf.getArtisteDAO();
 
-
-	DAO<Spectacle> spectacledao = adf.getSpectacleDAO();
+	DAO<Spectacle> spectacleDAO = adf.getSpectacleDAO();
 	
 	private int id_spectacle;
 	private String titre;
@@ -78,26 +76,53 @@ public class Spectacle {
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
 	}
-	
+
 
 	public Spectacle() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	public Spectacle(int id_spectacle, String titre, int nbr_place_max, List<Artiste> liste_artistes,
+			Configuration configuration, PlanningSalle id_salle) {
+		this.id_spectacle = id_spectacle;
+		this.titre = titre;
+		this.nbr_place_max = nbr_place_max;
+		this.liste_artistes = liste_artistes;
+		this.configuration = configuration;
+		this.id_salle = id_salle;
+	}
+
+	public Spectacle(String titre, int nbr_place_max, List<Artiste> liste_artistes,
+			Configuration configuration, PlanningSalle id_salle) {
+		this.titre = titre;
+		this.nbr_place_max = nbr_place_max;
+		this.liste_artistes = liste_artistes;
+		this.configuration = configuration;
+		this.id_salle = id_salle;
+	}
+	public Spectacle(String titre, int nbr_place_max, List<Artiste> liste_artistes) {
+		this.titre = titre;
+		this.nbr_place_max = nbr_place_max;
+		this.liste_artistes = liste_artistes;
+	}
+
 	//Method 
 	
 	public List<Artiste> findArtiste(){
-		List<Artiste> artistes = new ArrayList<Artiste>();
 		return artistedao.findall();
 	}
 	
 	public void create() {
 		//On crée d'abord le spectacle - ensuite on crée les sous-objets
-		spectacledao.create(this);
+		spectacleDAO.create(this);
 		this.addConfiguration();
 	}
 
 	public void addConfiguration() {
 		this.getConfiguration().create();
+	}
+	
+	public List<Spectacle> loadSpectacle(int id_salle) {
+		return spectacleDAO.findall(id_salle);
 	}
 }

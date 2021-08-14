@@ -17,8 +17,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JPasswordField;
 
-import be.lamattina.dao.AbstractDAOFactory;
-import be.lamattina.dao.DAO;
 import be.lamattina.pojo.*;
 
 public class JInscription extends JFrame {
@@ -57,10 +55,7 @@ public class JInscription extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public JInscription() {
-		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
-		DAO<Utilisateur> userdao = adf.getUtilisateurDAO();
-		
+	public JInscription() {		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 370, 310);
 		contentPane = new JPanel();

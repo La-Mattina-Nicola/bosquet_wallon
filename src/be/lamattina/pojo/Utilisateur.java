@@ -5,7 +5,7 @@ import be.lamattina.dao.DAO;
 
 public class Utilisateur {
 	AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
-	DAO<Utilisateur> utilisateurdao = adf.getUtilisateurDAO();
+	DAO<Utilisateur> utilisateurDAO = adf.getUtilisateurDAO();
 
 	private int id_utilisateur;
 	private String nom;
@@ -62,6 +62,12 @@ public class Utilisateur {
 		// TODO Auto-generated constructor stub
 		super();
 	}
+	
+	public Utilisateur(int id_utilisateur) {
+		// TODO Auto-generated constructor stub
+		super();
+		this.id_utilisateur = id_utilisateur;
+	}
 
 	public Utilisateur(int id_utilisateur, String nom, String prenom, String mot_de_passe, String email,
 			String adresse) {
@@ -84,10 +90,14 @@ public class Utilisateur {
 	}
 
 	public boolean create() {
-		return utilisateurdao.create(this);
+		return utilisateurDAO.create(this);
 	}
 	
 	public Utilisateur find() {
-		return utilisateurdao.find(this);
+		return utilisateurDAO.find(this);
+	}
+
+	public Utilisateur getId(int id) {
+		return utilisateurDAO.find(id);
 	}
 }

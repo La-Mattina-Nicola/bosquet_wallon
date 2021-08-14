@@ -69,4 +69,10 @@ public class CategorieDAO extends DAO<Categorie> {
 		return null;
 	}
 
+	@Override
+	public List<Categorie> findall(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

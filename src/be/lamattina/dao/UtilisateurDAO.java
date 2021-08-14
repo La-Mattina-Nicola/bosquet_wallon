@@ -125,4 +125,10 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 		return null;
 	}
 
+	@Override
+	public List<Utilisateur> findall(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
