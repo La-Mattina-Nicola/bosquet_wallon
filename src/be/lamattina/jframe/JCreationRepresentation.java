@@ -173,6 +173,9 @@ public class JCreationRepresentation extends JFrame {
 					catch(Exception ex) {
 						JOptionPane.showMessageDialog(null,ex.getMessage());
 					}
+					dispose();
+					JListeSpectacle frame = new JListeSpectacle(user);
+					frame.setVisible(true);
 				}
 			}
 		});

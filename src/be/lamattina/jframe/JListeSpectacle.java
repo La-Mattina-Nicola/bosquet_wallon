@@ -66,25 +66,17 @@ public class JListeSpectacle extends JFrame {
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
-				new Object[][] {},
-				new String[] {
-						"Objet",
-						"Objet",
-						"Statut",
-						"id_spectacle",
-						"Titre",
-						"Date de début",
-						"Date de fin"
-					}
-				)
-			{
-			boolean[] columnEditables = new boolean[] {
-					false, false, false
-				};
-				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
+			new Object[][] {},
+			new String[] {
+					"Objet",
+					"Objet",
+					"Statut",
+					"id_spectacle",
+					"Titre",
+					"Date de début",
+					"Date de fin"
 				}
-			}
+			)
 		);
 		
 		//Création des lignes
@@ -113,8 +105,6 @@ public class JListeSpectacle extends JFrame {
 				}
 			}
 		}
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		table.removeColumn(table.getColumnModel().getColumn(0));
 		table.getColumnModel().getColumn(0).setPreferredWidth(5);
 		table.getColumnModel().getColumn(1).setPreferredWidth(5);
 		table.getColumnModel().getColumn(2).setPreferredWidth(50);
@@ -134,6 +124,7 @@ public class JListeSpectacle extends JFrame {
 				for(Reservation reserv : user.getReservations()) {
 					r = reserv;
 				}
+				user.setReservation(user.getReservations().get(0));
 				JCreationSpectacle frame = new JCreationSpectacle(user.getReservation());
 				dispose();
 				frame.setVisible(true);

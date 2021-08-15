@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
+import be.lamattina.pojo.Configuration;
+import be.lamattina.pojo.PlanningSalle;
 import be.lamattina.pojo.Representation;
+import be.lamattina.pojo.Spectacle;
 
 public class RepresentationDAO extends DAO<Representation> {
 
@@ -27,7 +31,7 @@ public class RepresentationDAO extends DAO<Representation> {
 					+ d_b + "', '"
 					+ d_f + "', '"
 					+ d_o + "', '"
-					+ obj.getId_spectacle() + "')";
+					+ obj.getId_spectacle().getId_spectacle() + "')";
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeUpdate(query);
@@ -70,8 +74,26 @@ public class RepresentationDAO extends DAO<Representation> {
 
 	@Override
 	public List<Representation> findall(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Representation> lst_representation = new ArrayList<Representation>();
+		try {
+			String query = "SELECT * FROM Representation WHERE id_spectacle = " + id + ";";
+			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery(query);
+				while(result.next()) {
+					Representation r = new Representation(
+							result.getInt("id_representation"),
+							result.getTimestamp("date_debut"),
+							result.getTimestamp("date_fin"),
+							result.getTimestamp("heure_ouverture"),
+							new Spectacle(result.getInt("id_spectacle"))
+							);
+					lst_representation.add(r);
+				}
+			return lst_representation;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override

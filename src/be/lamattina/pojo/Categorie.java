@@ -1,5 +1,7 @@
 package be.lamattina.pojo;
 
+import java.util.List;
+
 import be.lamattina.dao.AbstractDAOFactory;
 import be.lamattina.dao.DAO;
 
@@ -74,12 +76,31 @@ public class Categorie {
 		this.nbr_place_max = nbr_place_max;
 	}
 
+	public Categorie(String type, float prix, int nbr_place_dispo, int nbr_place_max, Configuration id_configuration) {
+		this.type = type;
+		this.prix = prix;
+		this.nbr_place_dispo = nbr_place_dispo;
+		this.nbr_place_max = nbr_place_max;
+		this.id_configuration = id_configuration;
+	}
+
+	public Categorie(int id_categorie, String type, float prix, int nbr_place_dispo, int nbr_place_max) {
+		this.id_categorie = id_categorie;
+		this.type = type;
+		this.prix = prix;
+		this.nbr_place_dispo = nbr_place_dispo;
+		this.nbr_place_max = nbr_place_max;
+	}
+
 	public boolean create() {
 		return categoriedao.create(this);
 	}
 
-	public void update(int id_configuration2) {
+	public void update(int id_configuration) {
 		categoriedao.update(this);
-		
+	}
+
+	public List<Categorie> findall(int id_configuration) {
+		return categoriedao.findall(id_configuration);
 	}
 }

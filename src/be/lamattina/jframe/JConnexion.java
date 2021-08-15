@@ -22,7 +22,6 @@ public class JConnexion extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txt_id;
-	private JFrame fenetre = this;
 	private JPasswordField txt_password;
 	
 	/**
@@ -90,8 +89,6 @@ public class JConnexion extends JFrame {
 					// Verifier si l'utilisateur a rentrer les bonnes informations - (nom/mdp)
 						// aver la méthode FIND
 					Utilisateur user = u.find();
-					if (user instanceof Artiste) {
-					}
 					// Si l'utilisateur est l'ORGANISATEUR - gérer le spectacle
 					if (user instanceof Organisateur) {
 						//Si l'utilisateur a déjà reserver une salle.
@@ -112,7 +109,10 @@ public class JConnexion extends JFrame {
 					else if (user instanceof Gestionnaire) {
 					}
 					// Si l'utilisateur est un CLIENT OU un ARTISTE - jframe.RESERVATION
-					else if (user instanceof Client){
+					else {
+						JChoixSpectacle choixSpectacle = new JChoixSpectacle((Client) user);
+						choixSpectacle.setVisible(true);
+						dispose();
 					}
 				}
 			}
@@ -123,7 +123,7 @@ public class JConnexion extends JFrame {
 		btn_inscription.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				fenetre.dispose();
+				dispose();
 				JInscription f = new JInscription();
 				f.setVisible(true);
 			}
@@ -136,7 +136,7 @@ public class JConnexion extends JFrame {
 		
 
 		///////////
-		txt_id.setText("organisateur@hotmail.com");
+		txt_id.setText("client@hotmail.com");
 		txt_password.setText("1234");
 		///////////
 	}

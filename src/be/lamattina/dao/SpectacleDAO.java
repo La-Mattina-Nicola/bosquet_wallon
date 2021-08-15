@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.lamattina.pojo.Configuration;
 import be.lamattina.pojo.Organisateur;
 import be.lamattina.pojo.PlanningSalle;
 import be.lamattina.pojo.Reservation;
@@ -62,8 +63,35 @@ public class SpectacleDAO extends DAO<Spectacle>{
 
 	@Override
 	public List<Spectacle> findall() {
-		// TODO Auto-generated method stub
-		return null;
+		Spectacle s = new Spectacle();
+		List<Spectacle> lst_spectacle = new ArrayList<Spectacle>();
+		try {
+			String query = "SELECT * FROM Spectacle s inner join Configuration c on s.id_spectacle = c.id_spectacle;";
+			ResultSet result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery(query);
+				while(result.next()) {
+					s = new Spectacle(
+							result.getInt("id_spectacle"),
+							result.getString("titre"),
+							result.getInt("nbr_place_max"),
+							new Configuration(
+									result.getInt("id_configuration"), 
+									result.getString("type"),
+									result.getString("description"),
+									result.getInt("id_spectacle")
+									),
+							new PlanningSalle(result.getInt("id_salle"))
+					);
+					System.out.println(result);
+					lst_spectacle.add(s);
+					System.out.println(result);
+					
+				}
+			return lst_spectacle;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
@@ -75,6 +103,7 @@ public class SpectacleDAO extends DAO<Spectacle>{
 					.executeQuery(query);
 				while(result.next()) {
 					s = new Spectacle(result.getInt("id_spectacle"), result.getString("titre"), result.getInt("nbr_place_max"));
+					break;
 				}
 			return s;
 		} catch (SQLException e) {

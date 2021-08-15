@@ -20,8 +20,22 @@ public class Client extends Utilisateur {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void chargerSpectacle() {
-		
+	public List<Spectacle> chargerSpectacle() {
+		Spectacle s = new Spectacle();
+		this.setSpectacles(s.getAll());
+		return this.getSpectacles();
+	}
+
+	public List<Spectacle> getSpectacles() {
+		return spectacles;
+	}
+
+	public void setSpectacles(List<Spectacle> spectacles) {
+		this.spectacles = spectacles;
+	}
+
+	public void creerCommande(Commande c) {
+		c.create();		
 	}
 
 	

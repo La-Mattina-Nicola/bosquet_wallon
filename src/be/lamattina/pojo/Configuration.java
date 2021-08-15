@@ -8,6 +8,7 @@ import be.lamattina.dao.DAO;
 public class Configuration {
 	AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
 	DAO<Configuration> configurationdao = adf.getConfigurationDAO();
+	DAO<Categorie> categoriedao = adf.getCategorieDAO();
 
 	private int id_configuration;
 	private String type;
@@ -102,5 +103,15 @@ public class Configuration {
 
 	public void setId_spectacle(int id_spectacle) {
 		this.id_spectacle = id_spectacle;
+	}
+
+
+	public void chargerCategories() {
+		// CHARGER list - categories
+		List<Categorie> lst_cat = categoriedao.findall(id_configuration);
+		this.setCategories(lst_cat);
+		for(Categorie categorie : this.getCategories()) {
+			categorie.setId_configuration(this);
+		}
 	}
 }

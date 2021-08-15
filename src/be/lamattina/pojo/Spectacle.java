@@ -92,6 +92,13 @@ public class Spectacle {
 		this.configuration = configuration;
 		this.id_salle = id_salle;
 	}
+	public Spectacle(int id_spectacle, String titre, int nbr_place_max, Configuration configuration, PlanningSalle id_salle) {
+		this.id_spectacle = id_spectacle;
+		this.titre = titre;
+		this.nbr_place_max = nbr_place_max;
+		this.configuration = configuration;
+		this.id_salle = id_salle;
+	}
 	public Spectacle(int id_spectacle, String titre, int nbr_place_max, PlanningSalle id_salle) {
 		this.id_spectacle = id_spectacle;
 		this.titre = titre;
@@ -117,6 +124,9 @@ public class Spectacle {
 		this.nbr_place_max = nbr_place_max;
 		this.liste_artistes = liste_artistes;
 	}
+	public Spectacle(int id_spectacle) {
+		this.id_spectacle = id_spectacle;
+	}
 
 	//Method 
 	
@@ -128,31 +138,47 @@ public class Spectacle {
 		//On crée d'abord le spectacle - ensuite on crée les sous-objets
 		spectacleDAO.create(this);
 		Spectacle s = spectacleDAO.findlast();
+		System.out.println();
 		this.setId_spectacle(s.getId_spectacle());
 		this.getConfiguration().setId_spectacle(this.getId_spectacle());
+		
 		this.getConfiguration().create();
 		this.getConfiguration().update(this.getId_salle());
+		
+		for (Artiste a : this.getListe_artistes()) {
+			
+		}
 	}
 
-	
 	public List<Spectacle> loadSpectacle(int id_salle) {
 		return spectacleDAO.findall(id_salle);
 	}
-
 
 	public List<Representation> getListe_representation() {
 		return liste_representation;
 	}
 
-
 	public void setListe_representation(List<Representation> liste_representation) {
 		this.liste_representation = liste_representation;
 	}
 
-
 	public void addRepresentation(Representation r) {
 		// TODO Auto-generated method stub
-		r.setId_spectacle(this.getId_spectacle());
+		r.setId_spectacle(this);
 		r.create();
+	}
+	
+	public List<Spectacle> getAll() {
+		List<Spectacle> lst_spectacle = spectacleDAO.findall();
+		//Charger les configurations - categories
+		for(Spectacle s : lst_spectacle) {
+			s.getConfiguration().chargerCategories();
+		}
+		return lst_spectacle;
+	}
+	
+	public void chargerRepresentation(){
+		Representation r = new Representation();
+		this.setListe_representation(r.chargerListe(this.id_spectacle));
 	}
 }
