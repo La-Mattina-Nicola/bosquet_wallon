@@ -38,10 +38,6 @@ public class Organisateur extends Utilisateur {
 	public void creerReservation(Reservation r) {
 		r.setId_organisateur(this);
 		r.create(this);
-		
-		PlanningSalle ps = r.getId_salle().getlast();
-		r.setId_salle(ps);
-		r.update(ps);
 	}
 
 	public void chargerReservation() {

@@ -69,6 +69,7 @@ public class JListeSpectacle extends JFrame {
 				new Object[][] {},
 				new String[] {
 						"Objet",
+						"Objet",
 						"Statut",
 						"id_spectacle",
 						"Titre",
@@ -76,7 +77,15 @@ public class JListeSpectacle extends JFrame {
 						"Date de fin"
 					}
 				)
-			);
+			{
+			boolean[] columnEditables = new boolean[] {
+					false, false, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			}
+		);
 		
 		//Création des lignes
 		
@@ -93,6 +102,7 @@ public class JListeSpectacle extends JFrame {
 				for (var j : lst_spectacle) {
 					Object[] row = new Object[] {
 						j,
+						i.getId_salle(),
 						i.getStatus(),
 						j.getId_spectacle(),
 						j.getTitre(),
@@ -103,6 +113,7 @@ public class JListeSpectacle extends JFrame {
 				}
 			}
 		}
+		table.removeColumn(table.getColumnModel().getColumn(0));
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		table.getColumnModel().getColumn(0).setPreferredWidth(5);
 		table.getColumnModel().getColumn(1).setPreferredWidth(5);
@@ -136,6 +147,22 @@ public class JListeSpectacle extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//Lancer frame de creation de representation.
+				
+				// recup ligne selectionnee
+				int x = -1;
+				x = table.getSelectedRow();
+				if (x == -1) {
+					JOptionPane.showMessageDialog(null, "Selectionner un spectacle pour creer une representation");
+				}
+				else {
+					// Recuperer le spectacle - lancer la fenetre.
+					Spectacle s = (Spectacle) table.getModel().getValueAt(x, 0);
+					PlanningSalle ps = (PlanningSalle) table.getModel().getValueAt(x, 1);
+					s.setId_salle(ps);
+					JCreationRepresentation frame = new JCreationRepresentation(user, s);
+					frame.setVisible(true);
+					dispose();
+				}
 			}
 		});
 		btnNewRepresentation.setBounds(170, 222, 200, 23);

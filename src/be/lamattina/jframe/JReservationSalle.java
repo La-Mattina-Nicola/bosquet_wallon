@@ -201,7 +201,6 @@ public class JReservationSalle extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//Set date selectionnée
 				if(o.getReservation().getId_salle().verifierdisponibilite()) {
-					r.setId_organisateur(o);					
 					// CREATION DE LA RESERVATION
 					o.creerReservation(r);
 					//Afficher la liste des spectacle

@@ -15,6 +15,7 @@ public class Spectacle {
 	private String titre;
 	private int nbr_place_max;
 	private List<Artiste> liste_artistes;
+	private List<Representation> liste_representation;
 	private Configuration configuration;
 	private PlanningSalle id_salle;
 	
@@ -136,5 +137,22 @@ public class Spectacle {
 	
 	public List<Spectacle> loadSpectacle(int id_salle) {
 		return spectacleDAO.findall(id_salle);
+	}
+
+
+	public List<Representation> getListe_representation() {
+		return liste_representation;
+	}
+
+
+	public void setListe_representation(List<Representation> liste_representation) {
+		this.liste_representation = liste_representation;
+	}
+
+
+	public void addRepresentation(Representation r) {
+		// TODO Auto-generated method stub
+		r.setId_spectacle(this.getId_spectacle());
+		r.create();
 	}
 }

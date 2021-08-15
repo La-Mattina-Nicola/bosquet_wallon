@@ -34,5 +34,9 @@ public class DAOFactory extends AbstractDAOFactory {
 	public DAO<PlanningSalle> getPlanningSalleDAO() {
 		return new PlanningSalleDAO(conn);
 	}
+	@Override
+	public DAO<Representation> getRepresentationDAO() {
+		return new RepresentationDAO(conn);
+	}
 	
 }

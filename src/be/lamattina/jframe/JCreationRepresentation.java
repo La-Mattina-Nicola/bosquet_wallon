@@ -1,18 +1,27 @@
 package be.lamattina.jframe;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.toedter.calendar.JDateChooser;
+
+import be.lamattina.pojo.Organisateur;
+import be.lamattina.pojo.Representation;
+import be.lamattina.pojo.Spectacle;
+
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.util.Date;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class JCreationRepresentation extends JFrame {
@@ -31,7 +40,7 @@ public class JCreationRepresentation extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					JCreationRepresentation frame = new JCreationRepresentation();
+					JConnexion frame = new JConnexion();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +52,8 @@ public class JCreationRepresentation extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JCreationRepresentation() {
+	@SuppressWarnings("deprecation")
+	public JCreationRepresentation(Organisateur user, Spectacle s) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 370, 240);
 		contentPane = new JPanel();
@@ -52,8 +62,14 @@ public class JCreationRepresentation extends JFrame {
 		contentPane.setLayout(null);
 		this.setTitle("Création de représentation");
 
+		Date debut = s.getId_salle().getDate_debut();
+		debut.setDate(debut.getDate()-1);
+		Date fin = s.getId_salle().getDate_fin();
+		fin.setDate(fin.getDate()+1);
+		
 		JDateChooser DateRepresentation = new JDateChooser();
 		DateRepresentation.setBounds(199, 59, 146, 19);
+		
 		contentPane.add(DateRepresentation);
 
 		JLabel lblNewLabel = new JLabel("Date de la repr\u00E9senation");
@@ -114,7 +130,7 @@ public class JCreationRepresentation extends JFrame {
 		lblNewLabel_1_2.setBounds(309, 143, 45, 13);
 		contentPane.add(lblNewLabel_1_2);
 
-		JLabel lblNewLabel_3 = new JLabel("Titre du Spectacle");
+		JLabel lblNewLabel_3 = new JLabel(s.getTitre());
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setBounds(10, 11, 336, 37);
@@ -129,6 +145,37 @@ public class JCreationRepresentation extends JFrame {
 		BtnMenu.setBounds(10, 10, 414, 243);
 		
 		JButton BtnValider = new JButton("Valider");
+		BtnValider.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Recuperer la date choisie
+				Date recup_date = DateRepresentation.getDate();
+				SimpleDateFormat fm = new SimpleDateFormat("dd-MM-yy");
+				String d_debut = fm.format(debut);
+				String d_fin = fm.format(fin);
+				String message = "Choisissez une date entre : " + d_debut + " et " + d_fin;
+				if(recup_date.after(debut) && recup_date.before(fin))
+					JOptionPane.showMessageDialog(null, "AVANT " + message);
+				else {
+					//debut - fin - ouverture
+					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); 
+					SimpleDateFormat form = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+					String s_debut = sdf.format(recup_date) + " " + TxtHeureDebut.getText() + ":" + TxtMinuteDebut.getText() + ":00";
+					String s_fin = sdf.format(recup_date) + " " + TxtHeureFin.getText() + ":" + TxtMinuteFin.getText() + ":00";
+					String s_ouv = sdf.format(recup_date) + " " + TxtHeureOuverture.getText() + ":" + TxtMinuteOuverture.getText() + ":00";
+					try {
+						Date r_debut, r_fin, r_ouv = new Date();
+						r_debut = form.parse(s_debut);
+						r_fin = form.parse(s_fin);
+						r_ouv = form.parse(s_ouv);
+						Representation r = new Representation(r_debut, r_fin, r_ouv);
+						s.addRepresentation(r);
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(null,ex.getMessage());
+					}
+				}
+			}
+		});
 		BtnValider.setBounds(10, 169, 200, 21);
 		contentPane.add(BtnValider);
 		
